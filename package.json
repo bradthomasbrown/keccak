@@ -1,0 +1,13 @@
+{
+    "name": "@bradthomasbrown/keccak",
+    "description": "Minimal, unoptimized, and unaudited keccak and sponge function library in JavaScript/TypeScript.",
+    "version": "1.0.0",
+    "author": "Brad Brown <https://t.me/bradthomasbrown>",
+    "type": "module",
+    "files": [
+        "dist/"
+    ],
+    "exports": {
+        ".": "./dist/keccak.js"
+    }
+}
