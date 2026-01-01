@@ -8,6 +8,10 @@
         "dist/"
     ],
     "exports": {
-        ".": "./dist/keccak.js"
+        ".": "./dist/keccak.js",
+        "./keccak256": "./dist/concrete/keccak256.js"
+    },
+    "devDependencies": {
+        "@types/bun": "^1.3.5"
     }
 }
