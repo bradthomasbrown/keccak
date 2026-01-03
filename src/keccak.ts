@@ -223,12 +223,12 @@ function sponge(
         const D = d >> 3;
         const R = r >> 3;
         f.S.fill(0);
-	    const _f9_ = Math.ceil((N.byteLength + 1) / R) * R;
+	    const _f9_ = Math.ceil((N.byteLength + (b == 0 ? 1 : 0)) / R) * R;
 		const P = new Uint8Array(_f9_);
 		P.set(N);
         if (pad) {
-            const _56_ = pad(R, N.byteLength, b);
-            for (let i = 0, j = N.byteLength - 1; i < _56_.byteLength; i++, j++)
+            const _56_ = pad(R, N.byteLength - (b == 0 ? 0 : 1), b);
+            for (let i = 0, j = N.byteLength - (b == 0 ? 0 : 1); i < _56_.byteLength; i++, j++)
                 P[j]! += _56_[i]!;
         }
 		for (let p of _3d403e_(P, R)) {
@@ -256,7 +256,7 @@ function sponge(
  * @returns {Uint8Array} - The padding data to be appended to the message.
  */
 function padOneZeroStarOne(X:number, M:number, b:number):Uint8Array {
-    const _79_ = new Uint8Array(Math.ceil((M + 1) / X) * X - M + 1);
+    const _79_ = new Uint8Array(Math.ceil((M + 1) / X) * X - M);
     _79_[0]! += 1 << b;
     _79_[_79_.byteLength - 1]! += 0x80;
     return _79_;
@@ -282,12 +282,12 @@ function keccak_c(c:number):(N:Uint8Array, d:number, b:number) => Uint8Array {
  * @param {b} b - The length of the pre-sponge bit string that will pad input data.
  * @returns {(M:Uint8Array) => Uint8Array} A function which will permute input data and return output data.
  */
-function sha_3(k:(c:number)=>(N:Uint8Array, D:number, b:number)=>Uint8Array, c:number, n:number, b:number):(M:Uint8Array) => Uint8Array {
+function sha_3(k:(c:number)=>(N:Uint8Array, D:number, b:number)=>Uint8Array, c:number, n:null|number, b:number):(M:Uint8Array) => Uint8Array {
     const keccak = k(c);
     return function(M:Uint8Array) {
-        const _a9_ = new Uint8Array(M.byteLength + 1);
+        const _a9_ = new Uint8Array(M.byteLength + (b == 0 ? 0 : 1));
         _a9_.set(M);
-        _a9_[_a9_.byteLength - 1] = n;
+        if (b !== 0) _a9_[_a9_.byteLength - 1] = n!;
         const d = c >> 1;
         return keccak(_a9_, d, b);
     }
@@ -306,9 +306,9 @@ function sha_3(k:(c:number)=>(N:Uint8Array, D:number, b:number)=>Uint8Array, c:n
 function sha_3_xof(k:(c:number)=>(N:Uint8Array, D:number, b:number)=>Uint8Array, c:number, n:number, b:number):(M:Uint8Array, d:number) => Uint8Array {
     const keccak = k(c);
     return function(M:Uint8Array, D:number) {
-        const _a9_ = new Uint8Array(M.byteLength + 1);
+        const _a9_ = new Uint8Array(M.byteLength + (b == 0 ? 0 : 1));
         _a9_.set(M);
-        _a9_[_a9_.byteLength - 1] = n;
+        if (b != 0) _a9_[_a9_.byteLength - 1] = n;
         const d = D << 3;
         return keccak(_a9_, d, b);
     }
